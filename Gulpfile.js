@@ -1,57 +1,57 @@
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var webpack = require('webpack-stream');
-var path = require('path');
-var webserver = require('gulp-webserver');
+const path = require('path')
+const gulp = require('gulp')
+const sass = require('gulp-sass')
+const webpack = require('webpack-stream')
+const webserver = require('gulp-webserver')
 
-var BUILD_DIR = path.resolve(__dirname, 'public');
-var APP_DIR = path.resolve(__dirname, 'app');
+const __build = path.resolve(__dirname, 'public')
+const __src = path.resolve(__dirname, 'src')
 
-gulp.task('styles', function() {
-  gulp.src(APP_DIR + '/styles/**/*.scss')
+gulp.task('sass', () => {
+  gulp.src(__src + '/styles/**/*.scss')
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest(BUILD_DIR))
-});
+    .pipe(gulp.dest(__build))
+})
 
-gulp.task('webpack', function() {
-  gulp.src(APP_DIR + '/index.js')
+gulp.task('webpack', () => {
+  gulp.src(__src + '/index.js')
     .pipe(webpack())
-    .pipe(gulp.dest(BUILD_DIR));
-});
+    .pipe(gulp.dest(__build))
+})
 
-gulp.task('webserver', function() {
+gulp.task('webserver', () => {
   gulp.src('./')
     .pipe(webserver({
       fallback: 'index.html',
       livereload: true,
       directoryListing: false,
       open: true
-    }));
-});
+    }))
+})
 
-gulp.task('transpile', function() {
-  return gulp.src(APP_DIR + '/index.js')
+gulp.task('transpile', () => {
+  return gulp.src(__src + '/index.js')
     .pipe(webpack({
       output: {
-        path: BUILD_DIR,
+        path: __build,
         filename: 'bundle.js'
       },
       module: {
         loaders: [{
           test: /\.jsx?/,
-          include: APP_DIR,
+          include: __src,
           loader: 'babel'
         }]
       }
     }))
-    .pipe(gulp.dest(BUILD_DIR));
-});
+    .pipe(gulp.dest(__build))
+})
 
-gulp.task('default', ['styles', 'transpile', 'webserver'], function() {
-  gulp.watch(APP_DIR + '/styles/**/*.scss', ['styles']);
-  gulp.watch(APP_DIR + '/**/*.js', ['transpile']);
-});
+gulp.task('default', ['sass', 'transpile', 'webserver'], () => {
+  gulp.watch(__src + '/styles/**/*.scss', ['styles'])
+  gulp.watch(__src + '/**/*.js', ['transpile'])
+})
 
-gulp.task('build', ['styles', 'transpile']);
+gulp.task('build', ['styles', 'transpile'])
 
-gulp.task('serve', ['webserver']);
+gulp.task('serve', ['webserver'])
