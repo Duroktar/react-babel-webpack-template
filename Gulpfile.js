@@ -13,12 +13,6 @@ gulp.task('sass', () => {
     .pipe(gulp.dest(__build))
 })
 
-gulp.task('webpack', () => {
-  gulp.src(__src + '/index.js')
-    .pipe(webpack())
-    .pipe(gulp.dest(__build))
-})
-
 gulp.task('webserver', () => {
   gulp.src('./')
     .pipe(webserver({
@@ -48,10 +42,10 @@ gulp.task('transpile', () => {
 })
 
 gulp.task('default', ['sass', 'transpile', 'webserver'], () => {
-  gulp.watch(__src + '/styles/**/*.scss', ['styles'])
+  gulp.watch(__src + '/styles/**/*.scss', ['sass'])
   gulp.watch(__src + '/**/*.js', ['transpile'])
 })
 
-gulp.task('build', ['styles', 'transpile'])
+gulp.task('build', ['sass', 'transpile'])
 
 gulp.task('serve', ['webserver'])
