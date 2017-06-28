@@ -5,7 +5,7 @@ const webpack = require('webpack-stream')
 const webserver = require('gulp-webserver')
 
 const __build = path.resolve(__dirname, 'public')
-const __src = path.resolve(__dirname, 'src')
+const __src = path.resolve(__dirname, 'app')
 
 gulp.task('sass', () => {
   gulp.src(__src + '/styles/**/*.scss')
@@ -14,7 +14,7 @@ gulp.task('sass', () => {
 })
 
 gulp.task('webserver', () => {
-  gulp.src('./')
+  gulp.src('.')
     .pipe(webserver({
       fallback: 'index.html',
       livereload: true,
@@ -34,7 +34,11 @@ gulp.task('transpile', () => {
         loaders: [{
           test: /\.jsx?/,
           include: __src,
-          loader: 'babel'
+          loader: 'babel-loader',
+          query:
+            {
+              presets:['es2015', 'react']
+            }
         }]
       }
     }))
